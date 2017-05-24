@@ -57,5 +57,5 @@ else:
     for root, dirs, filenames in os.walk(args.source):
         for f in filenames:
             log = open(os.path.join(root,f), 'r')
-            opfile = "../output/op_"+f
+            opfile = "../output/op_"+args.keyword+"_"+f
             keywordSearch(log,args.keyword,opfile)
