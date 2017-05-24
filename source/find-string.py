@@ -4,12 +4,13 @@ from nltk.stem import *
 from nltk.tokenize import RegexpTokenizer
 import unicodedata
 
+#TODO: Mandatory arguments
 parser = argparse.ArgumentParser(description='Keyword search')
 parser.add_argument("-s","--source",help="source file/directory to search for keyword(s)")
 parser.add_argument("-k","--keyword",help="keyword to be found in the file(s)")
 args = parser.parse_args()
 
-#Function implementing Knuth-Morris-Pratt string matching to find keyword in source file
+#Function matching stemmed keyword to stemmed words in the file and storing number of occurrences
 def findWordOccurrences(words,keyword):
     numOccurrences = 0
     for word in words:
@@ -17,7 +18,7 @@ def findWordOccurrences(words,keyword):
             numOccurrences += 1
     return numOccurrences
 
-#Function to implement KMP algorithm for each line of source file
+#Function to search for the keyword for each line of a source file
 def keywordSearch(source, keyword, outputfile):
     stemmer = LancasterStemmer()
     tokenizer = RegexpTokenizer(r'\w+')
