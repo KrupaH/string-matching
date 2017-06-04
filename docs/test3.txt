@@ -1,3 +1,0 @@
-This is a file that has some words multiple times. The word "word" itself is seen in so many words
-that it's quite impossible to say that this word file is not the file that has the most 'word'
-words in it. Frankly, it has to have the highest word ranking for the word 'word'.
