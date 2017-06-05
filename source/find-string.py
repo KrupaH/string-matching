@@ -1,9 +1,12 @@
 import argparse
 import os
-from nltk.stem import *
-from nltk.tokenize import RegexpTokenizer
 import unicodedata
 import operator
+
+from nltk.stem import *
+from nltk.tokenize import RegexpTokenizer
+from timeit import default_timer as timer
+
 
 #TODO: Mandatory arguments
 parser = argparse.ArgumentParser(description='Keyword search')
@@ -50,6 +53,7 @@ def keywordSearch(source, keyword, filename):
 #stem the keyword
 stemmer = LancasterStemmer()
 
+start = timer()
 #Perform search for each file in the directory and store results
 if os.path.isfile(os.path.abspath(args.source)):
     keywordSearch(args.source,args.keyword)
@@ -58,6 +62,8 @@ else:
         for f in filenames:
             log = open(os.path.join(root,f), 'r')
             keywordSearch(log,args.keyword,f)
+end = timer()
+print("Direct word-comparison search: " + str(end-start) + " s")
 
 #sort list of files based on occurrences
 sortedList = sorted(filedict.items(), key=operator.itemgetter(1), reverse=True)
