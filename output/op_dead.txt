@@ -1,24 +1,24 @@
 Occurrences	Files
-33	shakespeare-hamlet-25.txt
-26	shakespeare-antony-23.txt
-24	shakespeare-cymbeline-17.txt
-23	shakespeare-pericles-21.txt
-19	shakespeare-life-54.txt
-19	shakespeare-life-56.txt
-18	shakespeare-king-45.txt
-16	shakespeare-othello-47.txt
-15	shakespeare-first-51.txt
-15	shakespeare-macbeth-46.txt
-15	shakespeare-julius-26.txt
-14	shakespeare-midsummer-16.txt
-13	shakespeare-alls-11.txt
-11	shakespeare-much-3.txt
-10	shakespeare-merry-15.txt
-6	shakespeare-as-12.txt
-6	shakespeare-measure-13.txt
-5	shakespeare-merchant-5.txt
-4	shakespeare-loves-8.txt
-4	shakespeare-coriolanus-24.txt
-4	shakespeare-comedy-7.txt
-4	shakespeare-life-55.txt
-0	shakespeare-lovers-62.txt
+[33, 33, 31, 33, 31]	shakespeare-hamlet-25.txt
+[26, 26, 22, 26, 22]	shakespeare-antony-23.txt
+[24, 24, 23, 24, 23]	shakespeare-cymbeline-17.txt
+[23, 23, 23, 23, 23]	shakespeare-pericles-21.txt
+[19, 19, 19, 19, 19]	shakespeare-life-54.txt
+[19, 19, 19, 19, 19]	shakespeare-life-56.txt
+[18, 18, 18, 18, 18]	shakespeare-king-45.txt
+[16, 16, 15, 16, 15]	shakespeare-othello-47.txt
+[15, 15, 15, 15, 15]	shakespeare-first-51.txt
+[15, 15, 15, 15, 15]	shakespeare-macbeth-46.txt
+[15, 15, 15, 15, 15]	shakespeare-julius-26.txt
+[14, 14, 12, 14, 12]	shakespeare-midsummer-16.txt
+[13, 13, 11, 13, 11]	shakespeare-alls-11.txt
+[11, 11, 10, 11, 10]	shakespeare-much-3.txt
+[10, 10, 10, 10, 10]	shakespeare-merry-15.txt
+[6, 6, 5, 6, 5]	shakespeare-as-12.txt
+[6, 6, 5, 6, 5]	shakespeare-measure-13.txt
+[5, 5, 5, 5, 5]	shakespeare-merchant-5.txt
+[4, 4, 4, 4, 4]	shakespeare-coriolanus-24.txt
+[4, 4, 4, 4, 4]	shakespeare-comedy-7.txt
+[4, 4, 4, 4, 4]	shakespeare-life-55.txt
+[4, 4, 3, 4, 3]	shakespeare-loves-8.txt
+[0, 0, 0, 0, 0]	shakespeare-lovers-62.txt

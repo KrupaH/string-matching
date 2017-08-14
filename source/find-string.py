@@ -10,6 +10,7 @@ from timeit import default_timer as timer
 import kmp
 import rk
 import wordsearch
+import re
 
 
 #TODO: Mandatory arguments
@@ -20,14 +21,14 @@ args = parser.parse_args()
 filedict = {}
 
 time_wordmatch = 0
-time_KMP = 0
+time_KMP_stem = 0
 time_KMP_nostem = 0
-time_RK = 0
+time_RK_stem = 0
 time_RK_nostem = 0
 
-#Function to search for the keyword in each line of a source file
+#Function to search for the keyword in the source file
 def keywordSearch(source, keyword, filename):
-    global time_wordmatch, time_KMP, time_KMP_nostem, time_RK_nostem, time_RK
+    global time_wordmatch, time_KMP_stem, time_KMP_nostem, time_RK_nostem, time_RK_stem
 
     stemmer = SnowballStemmer("english")
     tokenizer = RegexpTokenizer(r'\w+')
@@ -42,54 +43,53 @@ def keywordSearch(source, keyword, filename):
     shiftTable_stem = kmp.computeShiftTable(keyword_stem)
     shiftTable_nostem = kmp.computeShiftTable(keyword)
 
-    while True:
-        line = source.readline()
-        if not line:
-            break
-        #get words from line
-        wordlist = tokenizer.tokenize(line)
-        #stem words
-        wordlist = [stemmer.stem(word) for word in wordlist]
+    text = source.read()
+    pos = 0
 
-        #normalize unicode strings
-        words = []
-        for word in wordlist:
-            if isinstance(word, unicode):
-                words = words + [unicodedata.normalize('NFKD', word).encode('ascii','ignore')]
-            else:
-                words = words + [word]
+    #get words from text
+    wordlist = tokenizer.tokenize(text)
+    #stem words
+    wordlist = [stemmer.stem(word) for word in wordlist]
 
-        #Time finding number of word occurences with simple word match
-        start = timer()
-        numOccurrences += wordsearch.findWordOccurrences(words,keyword_stem)
-        end = timer()
-        time_wordmatch += (end-start)
+    #normalize unicode strings
+    words = ""
+    for word in wordlist:
+        if isinstance(word, unicode):
+            words = words + " " + str(unicodedata.normalize('NFKD', word).encode('ascii','ignore'))
+        else:
+            words = words + " " + word
 
-        filedict[filename] = numOccurrences
+    #Time finding number of word occurences with simple word match
+    start = timer()
+    numOccurrences += wordsearch.findWordOccurrences(words,keyword_stem)
+    end = timer()
+    time_wordmatch += (end-start)
 
-        #Time finding number of word matches using Rabin-Karp algorithm with stemming
-        start = timer()
-        numMatches_RK_stem += rk.findRKMatches(words,keyword_stem)
-        end = timer()
-        time_RK += (end-start)
+    #Time finding number of word matches using Rabin-Karp algorithm with stemming
+    start = timer()
+    numMatches_RK_stem += rk.findRKMatches(words,keyword_stem)
+    end = timer()
+    time_RK_stem += (end-start)
 
-        #Time finding number of word matches using Rabin-Karp algorithm without stemming
-        start = timer()
-        numMatches_RK_nostem += rk.findRKMatches(line,keyword)
-        end = timer()
-        time_RK_nostem += (end-start)
+    #Time finding number of word matches using Rabin-Karp algorithm without stemming
+    start = timer()
+    numMatches_RK_nostem += rk.findRKMatches(text,keyword)
+    end = timer()
+    time_RK_nostem += (end-start)
 
-        #Time finding number of word matches using KMP string matching with stemming
-        start = timer()
-        numMatches_KMP_stem += kmp.findKMPMatches(words,keyword_stem,shiftTable_stem)
-        end = timer()
-        time_KMP += (end-start)
+    #Time finding number of word matches using KMP string matching with stemming
+    start = timer()
+    numMatches_KMP_stem += kmp.findKMPMatches(words,keyword_stem,shiftTable_stem)
+    end = timer()
+    time_KMP_stem += (end-start)
 
-        #Time finding number of word matches using KMP string matching without stemming
-        start = timer()
-        numMatches_KMP_nostem += kmp.findKMPMatches(line, keyword, shiftTable_nostem)
-        end = timer()
-        time_KMP_nostem += (end-start)
+    #Time finding number of word matches using KMP string matching without stemming
+    start = timer()
+    numMatches_KMP_nostem += kmp.findKMPMatches(text, keyword, shiftTable_nostem)
+    end = timer()
+    time_KMP_nostem += (end-start)
+
+    filedict[filename] = [numOccurrences,numMatches_RK_stem,numMatches_RK_nostem,numMatches_KMP_stem,numMatches_KMP_nostem]
 
 #TODO: Check if path is valid
 
@@ -106,9 +106,9 @@ else:
 
 print("------------------------------------------")
 print("Direct word-comparison search time: " + str(time_wordmatch) + " s")
-print ("RK string-matching with stemming search time: " + str(time_RK) + " s")
+print ("RK string-matching with stemming search time: " + str(time_RK_stem) + " s")
 print ("RK string-matching without stemming search time: " + str(time_RK_nostem) + " s")
-print("KMP string-matching with stemming search time: "+str(time_KMP)+" s")
+print("KMP string-matching with stemming search time: "+str(time_KMP_stem)+" s")
 print("KMP string-matching without stemming search time: "+str(time_KMP_nostem)+" s")
 
 

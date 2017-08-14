@@ -46,5 +46,4 @@ def rabinKarp(S,P,q):
     return numMatched
 
 def findRKMatches(string, keyword):
-    string = " ".join(string)
     return rabinKarp(string,keyword,3)

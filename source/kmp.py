@@ -1,51 +1,49 @@
 #Function using enhanced KMP string matching to find number of matches in stemmed word list
-def findKMPMatches(words,keyword, shiftTable):
+def findKMPMatches(string,keyword,shiftTable):
     numMatches = 0
 
-    for word in words:
-        #TODO: Convert KMP to enhanced KMP
-        curMatch = 0
-        curChar = 0
+    M = len(keyword)
+    N = len(string)
 
-        while ((curMatch + curChar) < len(word)):
-            if keyword[curChar] == word[curMatch+curChar]:
-                curChar += 1
-                if curChar == len(keyword):
-                    numMatches += 1
-                    break
+    i = 0 # index for string[]
+    j = 0 #index for keyword[]
+    while i < N:
+        if keyword[j] == string[i]:
+            i += 1
+            j += 1
+
+        if j == M:
+            numMatches += 1
+            j = shiftTable[j-1]
+
+        # mismatch after j matches
+        elif i < N and keyword[j] != string[i]:
+            # Do not match shiftTable[0..shiftTable[j-1]] characters,
+            # they will match anyway
+            if j != 0:
+                j = shiftTable[j-1]
             else:
-                if shiftTable[curChar] > -1:
-                    curMatch += curChar - shiftTable[curChar]
-                    curChar = shiftTable[curChar]
-                else:
-                    curMatch += curChar + 1
-                    curChar = 0
-
+                i += 1
     return numMatches
 
 #Helper function to compute the shift table for KMP string matching
 def computeShiftTable(keyword):
     pos = 1
     nextCandidate = 0
-    shiftTable = [None for x in range(len(keyword)+1)]
+    shiftTable = [0]*(len(keyword))
 
-    shiftTable[0] = -1
+    shiftTable[0] = 0
 
     while (pos < len(keyword)):
         if keyword[pos] == keyword[nextCandidate]:
-            shiftTable[pos] = shiftTable[nextCandidate]
-            pos += 1
             nextCandidate += 1
-        else:
             shiftTable[pos] = nextCandidate
-            nextCandidate = shiftTable[nextCandidate]
-
-            while (nextCandidate >= 0 and keyword[pos] != keyword[nextCandidate]):
-                nextCandidate = shiftTable[nextCandidate]
-
             pos += 1
-            nextCandidate += 1
-
-        shiftTable[pos] = nextCandidate
+        else:
+            if nextCandidate != 0:
+                nextCandidate = shiftTable[nextCandidate-1]
+            else:
+                shiftTable[pos] = 0
+                pos += 1
 
     return shiftTable
