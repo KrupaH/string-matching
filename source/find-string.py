@@ -8,6 +8,7 @@ from nltk.tokenize import RegexpTokenizer
 from timeit import default_timer as timer
 
 import kmp
+import rk
 import wordsearch
 
 
@@ -21,16 +22,20 @@ filedict = {}
 time_wordmatch = 0
 time_KMP = 0
 time_KMP_nostem = 0
+time_RK = 0
+time_RK_nostem = 0
 
-#Function to search for the keyword for each line of a source file
+#Function to search for the keyword in each line of a source file
 def keywordSearch(source, keyword, filename):
-    global time_wordmatch, time_KMP, time_KMP_nostem
+    global time_wordmatch, time_KMP, time_KMP_nostem, time_RK_nostem, time_RK
 
     stemmer = SnowballStemmer("english")
     tokenizer = RegexpTokenizer(r'\w+')
     numOccurrences = 0
     numMatches_KMP_stem = 0
     numMatches_KMP_nostem = 0
+    numMatches_RK_stem = 0
+    numMatches_RK_nostem = 0
 
     keyword_stem = stemmer.stem(keyword)
 
@@ -62,6 +67,18 @@ def keywordSearch(source, keyword, filename):
 
         filedict[filename] = numOccurrences
 
+        #Time finding number of word matches using Rabin-Karp algorithm with stemming
+        start = timer()
+        numMatches_RK_stem += rk.findRKMatches(words,keyword_stem)
+        end = timer()
+        time_RK += (end-start)
+
+        #Time finding number of word matches using Rabin-Karp algorithm without stemming
+        start = timer()
+        numMatches_RK_nostem += rk.findRKMatches(line,keyword)
+        end = timer()
+        time_RK_nostem += (end-start)
+
         #Time finding number of word matches using KMP string matching with stemming
         start = timer()
         numMatches_KMP_stem += kmp.findKMPMatches(words,keyword_stem,shiftTable_stem)
@@ -82,13 +99,18 @@ if os.path.isfile(os.path.abspath(args.source)):
 else:
     for root, dirs, filenames in os.walk(args.source):
         for f in filenames:
-            log = open(os.path.join(root,f), 'r')
-            keywordSearch(log,args.keyword,f)
+            if os.path.splitext(f)[1] == '.txt':
+                print "Processing " + f + "..."
+                log = open(os.path.join(root,f), 'r')
+                keywordSearch(log,args.keyword,f)
 
-
+print("------------------------------------------")
 print("Direct word-comparison search time: " + str(time_wordmatch) + " s")
+print ("RK string-matching with stemming search time: " + str(time_RK) + " s")
+print ("RK string-matching without stemming search time: " + str(time_RK_nostem) + " s")
 print("KMP string-matching with stemming search time: "+str(time_KMP)+" s")
 print("KMP string-matching without stemming search time: "+str(time_KMP_nostem)+" s")
+
 
 #sort list of files based on occurrences
 sortedList = sorted(filedict.items(), key=operator.itemgetter(1), reverse=True)
